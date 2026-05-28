@@ -29,7 +29,7 @@ app.get('/health', (req, res) => {
 });
 
 async function transcribeAudio(audioBuffer, originalFilename) {
-    console.log(`\n🎧 Initializing Whisper Transcription for ${originalFilename}...`);
+  console.log(`\n🎧 Initializing Whisper Transcription for ${originalFilename}...`);
     
     
     const tempFilePath = path.join(os.tmpdir(), `${Date.now()}-${originalFilename}`);
@@ -38,15 +38,13 @@ async function transcribeAudio(audioBuffer, originalFilename) {
     fs.writeFileSync(tempFilePath, audioBuffer);
 
     try {
-        // Send the file to OpenAI's Whisper model (using your existing OpenAI client)
-        // NOTE: Ensure your OpenAI initialization variable is named 'openaiClient' 
-        // or change this variable to match yours!
-        const transcription = await openaiClient.audio.transcriptions.create({
+      // --- PIVOT TO GROQ WHISPER ---
+      const transcription = await groqClient.audio.transcriptions.create({
             file: fs.createReadStream(tempFilePath),
-            model: 'whisper-1',
+        model: 'whisper-large-v3', // Groq's blazing fast whisper model
         });
         
-        console.log(`✅ Transcription complete!`);
+      console.log(`✅ Groq Transcription complete!`);
         return transcription.text;
 
     } catch (error) {
@@ -81,15 +79,92 @@ app.post('/api/analyze', upload.single('transcript'), async (req, res) => {
       return res.status(400).json({ error: 'Unsupported format. Please upload .txt, .mp3, or .wav' });
     }
 
-    const systemPrompt = `You are an elite sales engineering AI. Extract a strictly valid JSON object from the transcript with the following shape:\n{
-  "repName": string,
-  "accountName": string,
-  "dealStage": string,
-  "overallRiskScore": number,
-  "meddicCompleteness": number,
-  "meddicData": object,
-  "objectionsData": array
-}\nReturn JSON only.`;
+    const systemPrompt = `
+You are an elite Sales Intelligence AI. Your mission is to analyze B2B sales call transcripts and extract highly structured intelligence based on the MEDDIC framework, deal risk, objections, and rep coaching.
+
+You MUST return a strictly valid JSON object. Do not include markdown formatting (like \`\`\`json), conversational text, or explanations. Return ONLY the JSON object.
+
+### EXTRACTION RULES & RUBRICS:
+
+1.  **Account Intel:** Identify the Sales Rep ("repName"), the Customer's Company ("accountName"), and the true "dealStageAssessment" based on the conversation context (e.g., Discovery, Needs Analysis, Negotiation, Closed).
+2.  **MEDDIC Extraction:** Analyze the transcript for all 6 MEDDIC elements:
+    * **M - Metrics:** Quantifiable business impact expected.
+    * **E - Economic Buyer:** The person with budget/sign-off authority.
+    * **D - Decision Criteria:** Technical or business requirements to evaluate options.
+    * **D - Decision Process:** How and when the decision will be made.
+    * **I - Identify Pain:** The specific problem driving the purchase.
+    * **C - Champion:** The internal advocate selling on the rep's behalf.
+    * *For each element, extract:* * "value": Summary of what was said (or null).
+        * "confidence": "High", "Medium", "Low", or "None".
+        * "quote": The exact verbatim quote from the transcript (or null).
+        * "gapFlag": Boolean (true if missing or low confidence).
+        * "gapRecommendation": A specific, scripted question the rep should ask next time to fill this gap (or null if confidence is High).
+    * Calculate "completenessScore" as a percentage (0-100) of elements with High/Medium confidence.
+3.  **Objection Analysis:** Identify explicit and implicit objections.
+    * "category": Must be "Price", "Timing", "Competition", "Need", or "Authority".
+    * "handlingStatus": Must be "Addressed", "Deflected", or "Missed".
+    * "suggestedResponse": Provide a better, scripted response for the rep.
+    * Provide an "overallHandlingScore" (1-10).
+4.  **Deal Intelligence:**
+    * "riskScore" (1-10): Overall deal health risk (1 = guaranteed win, 10 = lost).
+    * "riskFactors": Array of 3 specific risk factors cited from the call.
+    * "competitorMentions": Array of competitors named, the context, and if handled well (boolean).
+    * "buyingSignals": Array of positive indicators (e.g., timeline questions).
+    * "nextActions": Time-bound commitments made by either party.
+5.  **Rep Coaching:**
+    * "estimatedTalkRatio": Estimate the talk time percentage (e.g., "45% Rep / 55% Customer") based on word count.
+    * "questionQuality": Extract 1-2 "openEndedExamples" and 1-2 "closedExamples" asked by the rep.
+    * "top3CoachingPoints": Specific, actionable feedback based on this exact call.
+
+### STRICT JSON SCHEMA:
+{
+  "accountIntel": {
+    "repName": "string | null",
+    "accountName": "string | null",
+    "dealStageAssessment": "string"
+  },
+  "meddic": {
+    "completenessScore": number,
+    "elements": {
+      "metrics": { "value": "string | null", "confidence": "High|Medium|Low|None", "quote": "string | null", "gapFlag": boolean, "gapRecommendation": "string | null" },
+      "economicBuyer": { "value": "string | null", "confidence": "High|Medium|Low|None", "quote": "string | null", "gapFlag": boolean, "gapRecommendation": "string | null" },
+      "decisionCriteria": { "value": "string | null", "confidence": "High|Medium|Low|None", "quote": "string | null", "gapFlag": boolean, "gapRecommendation": "string | null" },
+      "decisionProcess": { "value": "string | null", "confidence": "High|Medium|Low|None", "quote": "string | null", "gapFlag": boolean, "gapRecommendation": "string | null" },
+      "identifyPain": { "value": "string | null", "confidence": "High|Medium|Low|None", "quote": "string | null", "gapFlag": boolean, "gapRecommendation": "string | null" },
+      "champion": { "value": "string | null", "confidence": "High|Medium|Low|None", "quote": "string | null", "gapFlag": boolean, "gapRecommendation": "string | null" }
+    }
+  },
+  "objectionAnalysis": {
+    "overallHandlingScore": number,
+    "objections": [
+      {
+        "text": "string",
+        "type": "Explicit|Implicit",
+        "category": "Price|Timing|Competition|Need|Authority",
+        "handlingStatus": "Addressed|Deflected|Missed",
+        "suggestedResponse": "string"
+      }
+    ]
+  },
+  "dealIntelligence": {
+    "riskScore": number,
+    "riskFactors": ["string"],
+    "competitorMentions": [
+      { "competitorName": "string", "context": "string", "handledWell": boolean }
+    ],
+    "buyingSignals": ["string"],
+    "nextActions": ["string"]
+  },
+  "repCoaching": {
+    "estimatedTalkRatio": "string",
+    "questionQuality": {
+      "openEndedExamples": ["string"],
+      "closedExamples": ["string"]
+    },
+    "top3CoachingPoints": ["string"]
+  }
+}
+`;
 
     // 1. Send text to Waterfall models
     let aiData = null;
