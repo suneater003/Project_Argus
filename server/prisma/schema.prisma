@@ -9,13 +9,24 @@ datasource db {
 
 model CallAnalysis {
   id                 String   @id @default(uuid())
+  userId             String
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   repName            String
   accountName        String
   dealStage          String
   overallRiskScore   Float
   meddicCompleteness Int
   rawTranscript      String   @db.Text
-  meddicData         Json     // Storing the complex AI extraction
-  objectionsData     Json     // Storing the array of objections
+  analysisData       Json
+  meddicData         Json
+  objectionsData     Json
   createdAt          DateTime @default(now())
+}
+
+model User {
+  id            String         @id @default(uuid())
+  email         String         @unique
+  password      String
+  createdAt     DateTime       @default(now())
+  analyses      CallAnalysis[]
 }

@@ -1,6 +1,71 @@
+import { useEffect, useMemo, useRef } from 'react'
 import { DollarSign, FileText } from 'lucide-react'
 
-export default function TranscriptPane({ transcript }) {
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+function uniqueSortedQuotes(quotes) {
+  return Array.from(
+    new Set(
+      (quotes || [])
+        .map((quote) => String(quote || '').trim())
+        .filter((quote) => quote.length > 0),
+    ),
+  ).sort((a, b) => b.length - a.length)
+}
+
+export default function TranscriptPane({ transcript, highlightQuotes = [], focusedQuote = '' }) {
+  const scrollRef = useRef(null)
+
+  const quotes = useMemo(() => uniqueSortedQuotes(highlightQuotes), [highlightQuotes])
+  const focus = useMemo(() => String(focusedQuote || '').trim(), [focusedQuote])
+
+  const renderedTranscript = useMemo(() => {
+    if (!transcript) return null
+    if (!quotes.length) return transcript
+
+    const segments = []
+    let cursor = 0
+
+    while (cursor < transcript.length) {
+      let bestMatch = null
+
+      for (const quote of quotes) {
+        const index = transcript.indexOf(quote, cursor)
+        if (index === -1) continue
+        if (!bestMatch || index < bestMatch.index || (index === bestMatch.index && quote.length > bestMatch.quote.length)) {
+          bestMatch = { index, quote }
+        }
+      }
+
+      if (!bestMatch) {
+        segments.push(transcript.slice(cursor))
+        break
+      }
+
+      if (bestMatch.index > cursor) {
+        segments.push(transcript.slice(cursor, bestMatch.index))
+      }
+
+      segments.push(bestMatch.quote)
+      cursor = bestMatch.index + bestMatch.quote.length
+    }
+
+    return { segments }
+  }, [quotes, transcript])
+
+  useEffect(() => {
+    if (!focus || !scrollRef.current) return
+
+    const target = Array.from(scrollRef.current.querySelectorAll('[data-quote]')).find(
+      (node) => node.getAttribute('data-quote') === focus,
+    )
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }, [focus, renderedTranscript])
+
   return (
     <article className="argus-pane">
       <div className="argus-pane__header">
@@ -14,9 +79,35 @@ export default function TranscriptPane({ transcript }) {
         </div>
       </div>
 
-      <div className="argus-transcript">
+      <div className="argus-transcript" ref={scrollRef}>
         {transcript ? (
-          transcript
+          <div style={{ whiteSpace: 'pre-wrap', lineHeight: 1.8 }}>
+            {Array.isArray(renderedTranscript)
+              ? renderedTranscript
+              : renderedTranscript?.segments?.map((segment, index) => {
+                  const isHighlight = quotes.includes(segment)
+                  const isFocused = focus && segment === focus
+                  if (!isHighlight) return <span key={index}>{segment}</span>
+
+                  return (
+                    <mark
+                      key={index}
+                      data-quote={segment}
+                      style={{
+                        background: isFocused ? 'rgba(0, 240, 255, 0.28)' : 'rgba(0, 240, 255, 0.16)',
+                        color: '#f8fbff',
+                        border: isFocused ? '1px solid rgba(0,240,255,0.65)' : '1px solid rgba(0, 240, 255, 0.36)',
+                        borderRadius: 6,
+                        padding: '0 4px',
+                        boxShadow: isFocused ? '0 0 24px rgba(0,240,255,0.18)' : '0 0 18px rgba(0,240,255,0.08)',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {segment}
+                    </mark>
+                  )
+                })}
+          </div>
         ) : (
           <div className="argus-empty-state">
             <div className="argus-empty-state__title">No transcript loaded</div>
