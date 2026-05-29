@@ -1,0 +1,27 @@
+Rep: Hi Sarah, thanks for hopping on. I saw you downloaded our guide on AI for Sales Coaching last week. To kick things off, what caught your eye about Project Argus?
+
+Customer: Honestly, we are just looking around right now. We currently use a mix of standard Zoom recordings and manual note-taking, but my CRO wants us to start exploring more automated intelligence solutions. 
+
+Rep: Makes sense. Are you the one who usually handles evaluating new sales tools?
+
+Customer: Mostly, yes. I'll narrow down the list and then bring the final two options to our CRO, David, for final budget approval. We don't have a specific budget carved out for this quarter yet, though. We are just fact-finding.
+
+Rep: Got it. So, just to understand your current world, how many calls are your managers actually reviewing each week with the current Zoom setup?
+
+Customer: That's the main issue. We have a team of 40 reps, and our managers are realistically only listening to maybe 2% of total calls. It's completely subjective. We lose deals and the CRM just says "Ghosted" or "Price too high," but we don't have the real data on why it's actually happening.
+
+Rep: That is a massive blind spot. If you could capture the actual, quote-level reasons for lost deals across all 40 reps, what kind of impact would that have on your pipeline?
+
+Customer: It's hard to put an exact number on it today, but even a 5% bump in our overall win rate would mean millions in realized revenue for the year. 
+
+Rep: Absolutely. We actually integrate directly with Salesforce to automatically update those exact fields so your reps don't have to. Speaking of which, what are the key things David and the rest of the team will be looking for to even consider buying a tool like this?
+
+Customer: The Salesforce integration is strictly mandatory. Aside from that, it needs to be intuitive. If it creates busywork for the reps, they just won't use it. And obviously, the price is going to be a major factor since, like I said, we aren't actively budgeted for this. I know Chorus and Gong are out there, but they feel very heavy and expensive.
+
+Rep: I completely understand. It sounds like the pain of not knowing why deals slip is very real, but we need to prove the ROI to David before we talk numbers. Let's do this: I'd love to set up a 30-minute tailored demo next week to show you the exact Salesforce workflow. Can we put a placeholder on the calendar for next Tuesday?
+
+Customer: Sure, Tuesday afternoon works. I can probably bring Mark, our Head of Enablement, to that call as well.
+
+Rep: Perfect. I'll send the calendar invite by end of day today. I will also include a quick two-pager on our CRM integration architecture for you to share with David in the meantime. 
+
+Customer: Sounds good, Jordan. Look out for your email.

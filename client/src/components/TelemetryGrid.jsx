@@ -1,29 +1,34 @@
+import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts'
 import { AlertTriangle, CheckCircle2, Gauge, ShieldAlert, Sparkles, User, Users } from 'lucide-react'
 
 function riskTone(score) {
-  if (score >= 8) return { label: 'Critical', color: '#ff4d6d' }
-  if (score >= 5) return { label: 'Elevated', color: '#ffb020' }
-  return { label: 'Stable', color: '#3ddc97' }
+  if (score >= 8) return { label: 'Critical', color: '#F43F5E' }
+  if (score >= 5) return { label: 'Elevated', color: '#F59E0B' }
+  return { label: 'Stable', color: '#10B981' }
 }
 
 function handlingTone(score) {
-  if (score >= 8) return { label: 'Strong', color: '#3ddc97' }
-  if (score >= 5) return { label: 'Mixed', color: '#ffb020' }
-  return { label: 'Weak', color: '#ff4d6d' }
+  if (score >= 8) return { label: 'Strong', color: '#10B981' }
+  if (score >= 5) return { label: 'Mixed', color: '#F59E0B' }
+  return { label: 'Weak', color: '#F43F5E' }
 }
 
-function MetricCard({ title, icon, children, accent = '#00f0ff' }) {
+function MetricCard({ title, icon, children, accent = '#10B981' }) {
   return (
     <article
       className="argus-metric-card"
-      style={{ borderColor: 'rgba(0, 240, 255, 0.12)' }}
+      style={{
+        background: 'linear-gradient(180deg, rgba(30, 41, 59, 0.96), rgba(15, 23, 42, 0.98))',
+        borderColor: 'rgba(148, 163, 184, 0.14)',
+        boxShadow: 'none',
+      }}
     >
       <div className="argus-metric-card__head">
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 10, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 10, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace', letterSpacing: '0.08em', textTransform: 'uppercase', color: '#F8FAFC' }}>
           {icon}
           {title}
         </span>
-        <span style={{ width: 10, height: 10, borderRadius: 999, background: accent, boxShadow: `0 0 18px ${accent}` }} />
+        <span style={{ width: 10, height: 10, borderRadius: 999, background: accent, boxShadow: 'none' }} />
       </div>
       {children}
     </article>
@@ -42,10 +47,60 @@ function ProgressCard({ title, valueText, percent, color, icon, note }) {
       <div className="argus-progress">
         <div
           className="argus-progress__fill"
-          style={{ width: `${percent}%`, background: `linear-gradient(90deg, ${color} 0%, #1e3a8a 100%)` }}
+          style={{ width: `${percent}%`, background: `linear-gradient(90deg, ${color} 0%, #334155 100%)` }}
         />
       </div>
     </MetricCard>
+  )
+}
+
+function MeddicGauge({ completenessScore, mappedElements, totalElements, mappedPercent }) {
+  const score = Math.max(0, Math.min(100, Number(completenessScore) || 0))
+  const data = [
+    { name: 'Covered', value: score },
+    { name: 'Remaining', value: 100 - score },
+  ]
+
+  return (
+    <div style={{ position: 'relative', height: '140px', minHeight: '140px' }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <PieChart>
+          <Pie
+            data={data}
+            dataKey="value"
+            startAngle={180}
+            endAngle={0}
+            innerRadius="70%"
+            outerRadius="100%"
+            stroke="none"
+          >
+            <Cell key="meddic-covered" fill="#10B981" />
+            <Cell key="meddic-remaining" fill="#334155" />
+          </Pie>
+        </PieChart>
+      </ResponsiveContainer>
+
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '10px',
+          width: '100%',
+          textAlign: 'center',
+          pointerEvents: 'none',
+        }}
+      >
+        <div style={{ color: '#F8FAFC', fontSize: 34, lineHeight: 1, fontWeight: 800, letterSpacing: '-0.04em' }}>
+          {score}%
+        </div>
+        <div style={{ marginTop: 6, color: '#94A3B8', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.16em' }}>
+          MEDDIC
+        </div>
+      </div>
+
+      <div style={{ marginTop: 6, color: '#94A3B8', fontSize: 13, textAlign: 'center' }}>
+        {mappedElements.length}/{totalElements} elements mapped, {mappedPercent}% covered.
+      </div>
+    </div>
   )
 }
 
@@ -68,18 +123,18 @@ export default function TelemetryGrid({ analysisData }) {
 
   return (
     <section className="argus-metrics">
-      <MetricCard title="Rep Intel" icon={<User size={16} />} accent="#00f0ff">
+      <MetricCard title="Rep Intel" icon={<User size={16} />} accent="#10B981">
         <div className="argus-metric-card__value">{accountIntel.repName || '—'}</div>
-        <div className="argus-metric-card__sub"><strong style={{ color: '#f4f7ff' }}>Account:</strong> {accountIntel.accountName || '—'}</div>
-        <div className="argus-metric-card__sub"><strong style={{ color: '#f4f7ff' }}>Stage:</strong> {accountIntel.dealStageAssessment || '—'}</div>
+        <div className="argus-metric-card__sub"><strong style={{ color: '#F8FAFC' }}>Account:</strong> {accountIntel.accountName || '—'}</div>
+        <div className="argus-metric-card__sub"><strong style={{ color: '#F8FAFC' }}>Stage:</strong> {accountIntel.dealStageAssessment || '—'}</div>
       </MetricCard>
 
       <MetricCard title="Account Intel" icon={<Users size={16} />} accent="#1e3a8a">
         <div className="argus-metric-card__value" style={{ fontSize: 18, lineHeight: 1.35 }}>
           {accountIntel.accountName || '—'}
         </div>
-        <div className="argus-metric-card__sub"><strong style={{ color: '#f4f7ff' }}>Assessment:</strong> {accountIntel.dealStageAssessment || '—'}</div>
-        <div className="argus-metric-card__sub" style={{ color: '#7df9ff' }}>
+        <div className="argus-metric-card__sub"><strong style={{ color: '#F8FAFC' }}>Assessment:</strong> {accountIntel.dealStageAssessment || '—'}</div>
+        <div className="argus-metric-card__sub" style={{ color: '#94A3B8' }}>
           Enterprise call signal.
         </div>
       </MetricCard>
@@ -93,14 +148,14 @@ export default function TelemetryGrid({ analysisData }) {
         note={`${risk.label} risk across ${dealIntelligence.riskFactors?.length || 0} tracked factors.`}
       />
 
-      <ProgressCard
-        title="MEDDIC Progress"
-        icon={<Gauge size={16} />}
-        valueText={`${completenessScore}%`}
-        percent={Math.max(0, Math.min(100, completenessScore))}
-        color="#00f0ff"
-        note={`${mappedElements.length}/${totalElements} elements mapped, ${mappedPercent}% covered.`}
-      />
+      <MetricCard title="MEDDIC Progress" icon={<Gauge size={16} />} accent="#10B981">
+        <MeddicGauge
+          completenessScore={completenessScore}
+          mappedElements={mappedElements}
+          totalElements={totalElements}
+          mappedPercent={mappedPercent}
+        />
+      </MetricCard>
 
       <MetricCard title="Handling Score" icon={<CheckCircle2 size={16} />} accent={handling.color}>
         <div className="argus-metric-card__value">

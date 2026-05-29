@@ -44,7 +44,11 @@ export async function signUp(email, password) {
 
 export async function analyzeTranscript(file) {
   const formData = new FormData();
-  formData.append('transcript', file);
+  const transcriptFile = typeof file === 'string'
+    ? new File([file], 'pasted-transcript.txt', { type: 'text/plain' })
+    : file;
+
+  formData.append('transcript', transcriptFile);
 
   try {
     const response = await api.post('/analyze', formData);

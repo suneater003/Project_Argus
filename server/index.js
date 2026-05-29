@@ -4,6 +4,7 @@ const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
+const mammoth = require('mammoth');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { OpenAI } = require('openai');
@@ -45,7 +46,7 @@ app.get('/health', (req, res) => {
 });
 
 function signToken(user) {
-  return jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
+  return jwt.sign({ userId: user.id, role: user.role }, JWT_SECRET, { expiresIn: '24h' });
 }
 
 function verifyToken(req, res, next) {
@@ -75,6 +76,33 @@ function safeArray(value) {
 function safeNumber(value, fallback = 0) {
   const numeric = Number(value);
   return Number.isFinite(numeric) ? numeric : fallback;
+}
+
+async function extractTranscriptTextFromUpload(file) {
+  if (!file) {
+    throw new Error('No file uploaded.');
+  }
+
+  const fileName = String(file.originalname || '').toLowerCase();
+  const mimeType = String(file.mimetype || '').toLowerCase();
+
+  if (mimeType === 'text/plain' || fileName.endsWith('.txt')) {
+    return { rawTranscriptText: file.buffer.toString('utf8'), sourceType: 'text' };
+  }
+
+  if (mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || fileName.endsWith('.docx')) {
+    const result = await mammoth.extractRawText({ buffer: file.buffer });
+    return { rawTranscriptText: result.value || '', sourceType: 'docx' };
+  }
+
+  if (mimeType.startsWith('audio/')) {
+    return {
+      rawTranscriptText: await transcribeAudio(file.buffer, file.originalname),
+      sourceType: 'audio',
+    };
+  }
+
+  throw new Error('Unsupported format. Please upload .txt, .docx, .mp3, or .wav');
 }
 
 function normalizeAnalysisData(aiData) {
@@ -225,7 +253,7 @@ app.post('/api/auth/signup', async (req, res) => {
 
     return res.status(201).json({
       token: signToken(user),
-      user: { id: user.id, email: user.email },
+      role: user.role,
     });
   } catch (error) {
     console.error('Signup failed:', error);
@@ -254,7 +282,7 @@ app.post('/api/auth/login', async (req, res) => {
 
     return res.status(200).json({
       token: signToken(user),
-      user: { id: user.id, email: user.email },
+      role: user.role,
     });
   } catch (error) {
     console.error('Login failed:', error);
@@ -268,17 +296,7 @@ app.post('/api/analyze', verifyToken, upload.single('transcript'), async (req, r
       return res.status(400).json({ error: 'No file uploaded.' });
     }
 
-    let rawTranscriptText = '';
-    let sourceType = 'text';
-
-    if (req.file.mimetype === 'text/plain') {
-      rawTranscriptText = req.file.buffer.toString('utf8');
-    } else if (req.file.mimetype.startsWith('audio/')) {
-      sourceType = 'audio';
-      rawTranscriptText = await transcribeAudio(req.file.buffer, req.file.originalname);
-    } else {
-      return res.status(400).json({ error: 'Unsupported format. Please upload .txt, .mp3, or .wav' });
-    }
+    const { rawTranscriptText, sourceType } = await extractTranscriptTextFromUpload(req.file);
 
     const systemPrompt = `
 You are an elite Sales Intelligence AI. Your mission is to analyze B2B sales call transcripts and extract highly structured intelligence based on the MEDDIC framework, deal risk, objections, and rep coaching.

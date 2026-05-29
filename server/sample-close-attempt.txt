@@ -1,0 +1,31 @@
+Rep: Hi Elena, Jordan here. Thanks for making the time. We're at the finish line here. The goal for today's call is to review the final contract for the Argus platform and get you set up for the Q3 rollout. How are you feeling about everything?
+
+Customer: I'm doing well, Jordan. I'm definitely excited about the platform, but we do have a couple of final hurdles before I can get Marcus in Finance to sign off on this.
+
+Rep: Okay, let's unpack that. What exactly is holding Marcus back at this stage? 
+
+Customer: Well, it comes down to the upfront implementation fee. $45,000 is a bit steep for us right now, especially since OmniTrack said they would waive their setup fees entirely if we signed with them this week.
+
+Rep: I hear you. Implementation costs are always tough to swallow on top of the software licenses. But remember, our setup fee includes the custom API integration with your legacy ERP system, which OmniTrack does not do out-of-the-box. If we don't integrate properly, you're still going to have that 40-hour-a-week manual data entry pain we talked about last month. 
+
+Customer: That's true. The seamless ERP integration is the main reason I want to go with your platform. The manual entry is costing us around $120,000 a year in wasted labor alone. I will try my best to push this through Marcus, but he can be really stubborn with new vendors.
+
+Rep: I appreciate you fighting for us on your end, Elena. So if we look at the big picture, that $45k pays for itself in less than six months based on those labor savings. Does that make sense to present to Marcus?
+
+Customer: Yes, I can frame it that way. But he's still going to push back on the total contract value. Is there any flexibility on the SaaS licenses if we sign a 2-year deal instead of a 1-year deal? 
+
+Rep: If you can commit to a 2-year term, I can get my VP to approve a 10% discount on the software licenses. But I would absolutely need the signed agreement by this Friday to lock in that specific end-of-quarter promotion. 
+
+Customer: Friday is really tight. Marcus is actually out of the office on Thursday. I can probably get it to him tomorrow morning. 
+
+Rep: Got it. What criteria does Marcus usually use to approve these things at the last minute? Just so I can make sure the proposal highlights exactly what he cares about.
+
+Customer: He mainly looks at the ROI timeline and cash flow impact. If you can send me an updated pricing proposal reflecting the 2-year discount by end of day today, I will sit down with him tomorrow at 10:00 AM to review it and hopefully get the final signature.
+
+Rep: You got it. I'll send the revised contract by 4:00 PM today. Just to be absolutely sure, if I get that to you, is there anyone besides Marcus who needs to review it? Does Legal need to see the new pricing?
+
+Customer: No, Legal already approved all the redlines yesterday. It's just Marcus now. If he's good with the cash flow, we sign.
+
+Rep: Perfect. I'll send that over. Let's plan a quick 5-minute sync tomorrow at 11:00 AM to confirm how the meeting with Marcus went.
+
+Customer: Sounds like a plan. Talk to you then, Jordan.

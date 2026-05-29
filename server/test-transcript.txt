@@ -1,4 +1,0 @@
-Rep: Hey Alex, thanks for hopping on the call. How are things at Acme Corp?
-Customer: Things are good, but we are really struggling with our current database speed. It's slowing down our entire application.
-Rep: I hear you. If we could improve your database speed by 50%, who would need to sign off on that purchase?
-Customer: That would be our CTO, Sarah. But honestly, the price might be a hurdle for us right now.

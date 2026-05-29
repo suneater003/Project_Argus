@@ -1,0 +1,51 @@
+Rep: Hi Mark, great to speak with you again. And I see we have Lisa on the line as well. Lisa, it is great to meet you. 
+
+Customer (Lisa): Hi Jordan, thanks for having me. Mark gave me a quick overview of Project Argus, but since I run IT and InfoSec here, I’m mostly here to grill you on your data compliance.
+
+Rep: I welcome it! That’s exactly what today is for. Mark, just to make sure we are aligned on the agenda, my goal today was to validate the technical fit with Lisa, and then spend the second half of the call mapping out the exact ROI business case we need to show the CFO. Does that sound right?
+
+Customer (Mark): That sounds perfect, Jordan. Let's get Lisa's technical questions out of the way first. If IT doesn't sign off, this deal goes nowhere anyway.
+
+Rep: Understood. Lisa, I'll pass the mic to you. What are the top two or three technical requirements you need to see from an intelligence platform?
+
+Customer (Lisa): Well, first and foremost is data privacy. You are processing audio recordings of our enterprise clients. We cannot have that data training public LLMs. We used a trial of Gong last year, and our legal team flagged their data retention policies as a major risk. How does Argus handle tenant isolation?
+
+Rep: That is a very valid concern. We actually use a zero-retention API architecture. We process the transcript to extract the MEDDIC signals and deal risk, push the structured JSON directly to your Salesforce instance, and then the raw audio buffer is immediately scrubbed from our processing servers. We are completely SOC2 Type II compliant. 
+
+Customer (Lisa): Okay, zero-retention is exactly what my legal team wants to hear. What about the Salesforce integration? Is it a managed package, or do we have to build custom API webhooks? 
+
+Rep: It's a native managed package. It takes about 15 minutes to install, and it maps the extracted fields directly to your custom Opportunity fields in Salesforce. I can send you the integration documentation and our SOC2 report right after this call.
+
+Customer (Lisa): Please do. If the SOC2 checks out, I don't see any technical blockers from my end. I'll drop off and let you two discuss the commercial side. Thanks, Jordan.
+
+Rep: Thanks, Lisa. Talk soon. 
+
+[Pause]
+
+Rep: Alright Mark, it sounds like we are clearing the IT hurdle. Let's talk about the business case. We established last time that your ramp time for new sales reps is hovering around 6 months, and you want to cut that down. 
+
+Customer (Mark): Exactly. We are hiring 20 new AEs next quarter. Right now, it takes them 6 months to consistently hit quota because they are fumbling through discovery calls and missing qualification steps. If Argus can automatically flag when a rep misses the 'Economic Buyer' or fumbles a 'Price' objection, my enablement team can coach them instantly. 
+
+Rep: If we can use Argus to reduce that ramp time from 6 months down to 3 months, what does that actually mean for the business in terms of hard revenue?
+
+Customer (Mark): I ran the math with our RevOps lead yesterday. If 20 reps hit full productivity 3 months early, and their monthly quota is $50k, we are looking at roughly $3 million in additional generated pipeline this year. 
+
+Rep: That is a massive number. $3 million in pipeline off a software investment that costs a fraction of that. Will Sarah, your CFO, agree with that math?
+
+Customer (Mark): Sarah is tough. She froze all net-new software budgets last week because of the economic downturn. But, she also made a mandate that we have to increase pipeline efficiency. If we frame Argus as an efficiency multiplier that guarantees the $3M pipeline increase, she will approve it. But she won't just take my word for it.
+
+Rep: Got it. Would it be helpful if you and I co-authored a 3-slide executive summary specifically highlighting the ramp-time ROI and the IT zero-retention security? You can take that directly to Sarah.
+
+Customer (Mark): That would be incredibly helpful, yes. Do you have a template you've used with other enterprise CFOs?
+
+Rep: I do. I will draft that up using the $3M pipeline metric we just discussed and send it to you by tomorrow morning. 
+
+Customer (Mark): Perfect. 
+
+Rep: In terms of timeline, if Sarah reviews that deck on Monday and gives the green light, what are the remaining steps to get a contract signed by the end of this month?
+
+Customer (Mark): Once Sarah approves the budget, it goes to Procurement for a final vendor setup, which takes about 48 hours. If we get Sarah's approval next week, signing by the 30th is very realistic. 
+
+Rep: Excellent. So my deliverables are the SOC2 report and Integration Guide to Lisa by end of day, and the Executive ROI slide deck to you by tomorrow morning. Let's schedule a 15-minute sync for next Wednesday to see how the conversation with Sarah went.
+
+Customer (Mark): Works for me. Send over the calendar invite. Thanks for the help, Jordan.

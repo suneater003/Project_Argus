@@ -94,12 +94,12 @@ export default function TranscriptPane({ transcript, highlightQuotes = [], focus
                       key={index}
                       data-quote={segment}
                       style={{
-                        background: isFocused ? 'rgba(0, 240, 255, 0.28)' : 'rgba(0, 240, 255, 0.16)',
-                        color: '#f8fbff',
-                        border: isFocused ? '1px solid rgba(0,240,255,0.65)' : '1px solid rgba(0, 240, 255, 0.36)',
+                        background: isFocused ? 'rgba(16, 185, 129, 0.22)' : 'rgba(16, 185, 129, 0.12)',
+                        color: '#F8FAFC',
+                        border: isFocused ? '1px solid rgba(16,185,129,0.55)' : '1px solid rgba(148, 163, 184, 0.24)',
                         borderRadius: 6,
                         padding: '0 4px',
-                        boxShadow: isFocused ? '0 0 24px rgba(0,240,255,0.18)' : '0 0 18px rgba(0,240,255,0.08)',
+                        boxShadow: 'none',
                         cursor: 'pointer',
                       }}
                     >

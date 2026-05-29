@@ -24,9 +24,10 @@ model CallAnalysis {
 }
 
 model User {
-  id            String         @id @default(uuid())
-  email         String         @unique
-  password      String
-  createdAt     DateTime       @default(now())
-  analyses      CallAnalysis[]
+  id        String         @id @default(uuid())
+  email     String         @unique
+  password  String
+  role      String         @default("REP")
+  createdAt DateTime       @default(now())
+  calls     CallAnalysis[]
 }

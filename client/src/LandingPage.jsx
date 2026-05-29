@@ -20,7 +20,8 @@ function AuthModal({ mode, setMode, onAuthenticated }) {
       const action = isLogin ? signIn : signUp
       const payload = await action(form.email, form.password)
       window.localStorage.setItem('argus_token', payload.token)
-      onAuthenticated?.(payload.token, payload.user)
+      window.localStorage.setItem('userRole', payload.role || 'REP')
+      onAuthenticated?.(payload.token, payload.role || 'REP', form.email)
     } catch (err) {
       setError(err.message || 'Authentication failed.')
     } finally {
@@ -34,7 +35,7 @@ function AuthModal({ mode, setMode, onAuthenticated }) {
         <div className="argus-auth-modal__header">
           <div>
             <div className="argus-auth-modal__eyebrow">Secure Access</div>
-            <h2>{isLogin ? 'Sign In' : 'Create Operative Account'}</h2>
+            <h2>{isLogin ? 'Sign in to Argus' : 'Create your workspace'}</h2>
           </div>
           <div className="argus-pill">
             <ShieldAlert size={14} />
@@ -89,7 +90,7 @@ function AuthModal({ mode, setMode, onAuthenticated }) {
 
           <button type="submit" className="argus-button argus-button--primary" disabled={loading}>
             {loading ? <span className="argus-spinner" /> : <Lock size={16} />}
-            {loading ? 'Authorizing...' : isLogin ? 'Launch Command Center' : 'Create Account'}
+            {loading ? 'Authorizing...' : isLogin ? 'Launch Workspace' : 'Create Account'}
           </button>
         </form>
       </div>
@@ -99,7 +100,12 @@ function AuthModal({ mode, setMode, onAuthenticated }) {
 
 export default function LandingPage({ onAuthenticated }) {
   const [mode, setMode] = useState('login')
-  const [showModal, setShowModal] = useState(true)
+  const [showModal, setShowModal] = useState(false)
+
+  const openModal = (nextMode = 'login') => {
+    setMode(nextMode)
+    setShowModal(true)
+  }
 
   return (
     <div className="argus-landing">
@@ -107,38 +113,47 @@ export default function LandingPage({ onAuthenticated }) {
       <div className="argus-landing__halo argus-landing__halo--two" />
 
       <main className="argus-landing__shell">
-        <header className="argus-landing__topbar">
-          <div className="argus-brand">
-            <div className="argus-brand__logo">
-              <ShieldAlert size={26} />
-            </div>
-            <div>
-              <div className="argus-eyebrow">Project Argus</div>
-              <div className="argus-landing__brandline">Multi-tenant Sales Intelligence SaaS</div>
-            </div>
-          </div>
-          <button type="button" className="argus-button argus-button--ghost argus-landing__cta" onClick={() => setShowModal(true)}>
-            Open Secure Access
-            <ArrowRight size={16} />
-          </button>
-        </header>
-
         <section className="argus-landing__hero">
           <div className="argus-landing__hero-copy">
+            <div className="argus-brand" style={{ marginBottom: 6, alignItems: 'center', gap: 16 }}>
+              <div
+                className="argus-brand__logo"
+                style={{
+                  width: 80,
+                  height: 80,
+                  background: 'transparent',
+                  boxShadow: 'none',
+                  border: 'none',
+                  borderRadius: 0,
+                }}
+              >
+                <img
+                  src="/logo.png"
+                  alt="Project Argus logo"
+                  className="argus-brand__image"
+                  style={{ width: 80, height: 80, mixBlendMode: 'screen' }}
+                />
+              </div>
+              <div>
+                <div className="argus-eyebrow">PROJECT ARGUS</div>
+                <div className="argus-landing__brandline">Enterprise Sales Intelligence Platform</div>
+              </div>
+            </div>
+
             <div className="argus-landing__badge">
               <Sparkles size={14} />
-              Digital Cyber-Mythology Command Center
+              Enterprise command center
             </div>
-            <h1>Decode the Conversation. Dominate the Deal.</h1>
+            <h1>Decode every call. Deliver the next best action.</h1>
             <p>
-              Project Argus is the all-seeing intelligence engine for enterprise sales teams. Drop in a call transcript, and our multi-model AI instantly extracts MEDDIC gaps, flags hidden objections, and calculates deal risk in real-time.
+              Project Argus is the secure sales intelligence workspace for enterprise teams. Upload a call, extract MEDDIC signals, identify objections, and move the account forward with a focused follow-up plan.
             </p>
             <div className="argus-landing__actions">
-              <button type="button" className="argus-button argus-button--primary" onClick={() => setShowModal(true)}>
+              <button type="button" className="argus-button argus-button--primary" onClick={() => openModal('login')}>
                 Enter the Command Center
                 <ArrowRight size={16} />
               </button>
-              <button type="button" className="argus-button argus-button--ghost" onClick={() => setMode('signup')}>
+              <button type="button" className="argus-button argus-button--ghost" onClick={() => openModal('signup')}>
                 Create Operative Account
               </button>
             </div>
@@ -146,16 +161,16 @@ export default function LandingPage({ onAuthenticated }) {
 
           <div className="argus-landing__vision-grid">
             <article className="argus-landing__vision-card">
-              <div className="argus-landing__vision-kicker">The All-Seeing Eye</div>
-              <h3>Never miss a buying signal. Argus maps every conversation against the strict MEDDIC framework.</h3>
+              <div className="argus-landing__vision-kicker">MEDDIC clarity</div>
+              <h3>See qualification gaps instantly with structured MEDDIC extraction and quote-level evidence.</h3>
             </article>
             <article className="argus-landing__vision-card">
-              <div className="argus-landing__vision-kicker">Tactical Rep Coaching</div>
-              <h3>Stop guessing why deals stall. Get objective, AI-driven coaching on talk ratios and question quality.</h3>
+              <div className="argus-landing__vision-kicker">Rep coaching</div>
+              <h3>Compare talk ratio, question quality, and objection handling in one readable workspace.</h3>
             </article>
             <article className="argus-landing__vision-card">
-              <div className="argus-landing__vision-kicker">Multi-Model Resilience</div>
-              <h3>Powered by a cascading AI waterfall architecture ensuring zero downtime and maximum precision.</h3>
+              <div className="argus-landing__vision-kicker">Manager visibility</div>
+              <h3>Track rep performance, account health, and objection trends without leaving the platform.</h3>
             </article>
           </div>
         </section>
