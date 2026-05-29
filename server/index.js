@@ -49,6 +49,15 @@ function signToken(user) {
   return jwt.sign({ userId: user.id, role: user.role }, JWT_SECRET, { expiresIn: '24h' });
 }
 
+function requireJwtSecret(res) {
+  if (!JWT_SECRET) {
+    res.status(500).json({ error: 'JWT_SECRET is not configured on the server.' });
+    return false;
+  }
+
+  return true;
+}
+
 function verifyToken(req, res, next) {
   const authHeader = req.headers.authorization || '';
   const [scheme, token] = authHeader.split(' ');
@@ -228,6 +237,10 @@ async function extractWithWaterfall(transcriptText, systemPrompt) {
 
 app.post('/api/auth/signup', async (req, res) => {
   try {
+    if (!requireJwtSecret(res)) {
+      return;
+    }
+
     const email = String(req.body.email || '').trim().toLowerCase();
     const password = String(req.body.password || '');
 
@@ -263,6 +276,10 @@ app.post('/api/auth/signup', async (req, res) => {
 
 app.post('/api/auth/login', async (req, res) => {
   try {
+    if (!requireJwtSecret(res)) {
+      return;
+    }
+
     const email = String(req.body.email || '').trim().toLowerCase();
     const password = String(req.body.password || '');
 
