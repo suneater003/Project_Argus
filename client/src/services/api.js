@@ -28,7 +28,7 @@ function normalizeApiError(error, fallbackMessage) {
 
 export async function signIn(email, password) {
   try {
-    const response = await api.post('/auth/login', { email, password });
+    const response = await api.post('/api/auth/login', { email, password });
     return response.data;
   } catch (error) {
     throw normalizeApiError(error, 'Failed to login.');
@@ -37,7 +37,7 @@ export async function signIn(email, password) {
 
 export async function signUp(email, password) {
   try {
-    const response = await api.post('/auth/signup', { email, password });
+    const response = await api.post('/api/auth/signup', { email, password });
     return response.data;
   } catch (error) {
     throw normalizeApiError(error, 'Failed to create account.');
@@ -53,7 +53,7 @@ export async function analyzeTranscript(file) {
   formData.append('transcript', transcriptFile);
 
   try {
-    const response = await api.post('/analyze', formData);
+    const response = await api.post('/api/analyze', formData);
     return response.data;
   } catch (error) {
     throw normalizeApiError(error, 'Failed to analyze transcript.');
@@ -62,7 +62,7 @@ export async function analyzeTranscript(file) {
 
 export async function fetchHistory() {
   try {
-    const response = await api.get('/history');
+    const response = await api.get('/api/history');
     return response.data;
   } catch (error) {
     throw normalizeApiError(error, 'Failed to load call history.');
