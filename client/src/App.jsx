@@ -8,7 +8,6 @@ import TelemetryGrid from './components/TelemetryGrid.jsx'
 import TranscriptPane from './components/TranscriptPane.jsx'
 import AnalysisBoard from './components/AnalysisBoard.jsx'
 import { analyzeTranscript } from './services/api.js'
-import api from '../services/api';
 
 const emptyAnalysis = {
   accountIntel: {
