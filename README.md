@@ -230,6 +230,8 @@ Notes:
 - Use Option B only if you intentionally want the default for all new users to change.
 
 ---
+## 🧠 Architecture & Reflection
+To read my analysis on the prompt engineering decisions, LLM limitations, and where MEDDIC extraction fails in edge-case sales calls, please see the [Reflection Document](REFLECTION.md).
 
 ## Additional notes for maintainers
 - If you plan to add or change LLM providers, keep the prompt strictness and JSON-schema enforcement.
