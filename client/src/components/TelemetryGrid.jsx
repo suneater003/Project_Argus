@@ -54,7 +54,7 @@ function ProgressCard({ title, valueText, percent, color, icon, note }) {
   )
 }
 
-function MeddicGauge({ completenessScore, mappedElements, totalElements, mappedPercent }) {
+function MeddicGauge({ completenessScore, mappedElements, totalElements, mappedPercent, mappedCount }) {
   const score = Math.max(0, Math.min(100, Number(completenessScore) || 0))
   const data = [
     { name: 'Covered', value: score },
@@ -98,7 +98,7 @@ function MeddicGauge({ completenessScore, mappedElements, totalElements, mappedP
       </div>
 
       <div style={{ marginTop: 6, color: '#94A3B8', fontSize: 13, textAlign: 'center' }}>
-        {mappedElements.length}/{totalElements} elements mapped, {mappedPercent}% covered.
+        {mappedCount}/{totalElements} elements identified. Confidence weighted.
       </div>
     </div>
   )
@@ -112,13 +112,36 @@ export default function TelemetryGrid({ analysisData }) {
   const objectionAnalysis = data.objectionAnalysis || {}
 
   const riskScore = Number(dealIntelligence.riskScore) || 0
-  const completenessScore = Number(meddic.completenessScore) || 0
+  // Compute a deterministic MEDDIC completeness score from element confidences
+  const meddicElements = meddic.elements || {}
+  const MEDDIC_KEYS = ['metrics', 'economicBuyer', 'decisionCriteria', 'decisionProcess', 'identifyPain', 'champion']
+  const {
+    computedCompleteness,
+    mappedCount,
+  } = (() => {
+    let points = 0
+    let mapped = 0
+
+    MEDDIC_KEYS.forEach((key) => {
+      const el = meddicElements[key]
+      const conf = String(el?.confidence || '').toLowerCase()
+      const hasValue = (el?.value && String(el.value).trim().length > 0) || (el?.quote && String(el.quote).trim().length > 0)
+      if (hasValue) mapped += 1
+      if (conf === 'high') points += 1
+      else if (conf === 'medium') points += 0.5
+    })
+
+    const pct = Math.round((points / 6) * 100)
+    return { computedCompleteness: pct, mappedCount: mapped }
+  })()
+
+  const completenessScore = Number(computedCompleteness) || 0
   const handlingScore = Number(objectionAnalysis.overallHandlingScore) || 0
   const risk = riskTone(riskScore)
   const handling = handlingTone(handlingScore)
-  const mappedElements = Object.values(meddic.elements || {}).filter((entry) => entry?.value && String(entry.value).trim().length > 0)
-  const totalElements = Object.keys(meddic.elements || {}).length || 6
-  const mappedPercent = Math.round((mappedElements.length / totalElements) * 100)
+  const mappedElements = Object.values(meddic.elements || {}).filter((entry) => (entry?.value && String(entry.value).trim().length > 0) || (entry?.quote && String(entry.quote).trim().length > 0))
+  const totalElements = 6
+  const mappedPercent = Math.round((mappedCount / totalElements) * 100)
   const objectionCount = objectionAnalysis.objections?.length || 0
 
   return (
@@ -154,6 +177,7 @@ export default function TelemetryGrid({ analysisData }) {
           mappedElements={mappedElements}
           totalElements={totalElements}
           mappedPercent={mappedPercent}
+          mappedCount={mappedCount}
         />
       </MetricCard>
 

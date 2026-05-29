@@ -135,7 +135,7 @@ export default function LandingPage({ onAuthenticated }) {
                 />
               </div>
               <div>
-                <div className="argus-eyebrow">PROJECT ARGUS</div>
+                <div className="argus-eyebrow" style={{ fontSize: 20, fontWeight: 600 }}>PROJECT ARGUS</div>
                 <div className="argus-landing__brandline">Enterprise Sales Intelligence Platform</div>
               </div>
             </div>
@@ -161,15 +161,15 @@ export default function LandingPage({ onAuthenticated }) {
 
           <div className="argus-landing__vision-grid">
             <article className="argus-landing__vision-card">
-              <div className="argus-landing__vision-kicker">MEDDIC clarity</div>
+              <div className="argus-landing__vision-kicker" style={{ fontSize: 16, fontWeight: 600 }}>MEDDIC clarity</div>
               <h3>See qualification gaps instantly with structured MEDDIC extraction and quote-level evidence.</h3>
             </article>
             <article className="argus-landing__vision-card">
-              <div className="argus-landing__vision-kicker">Rep coaching</div>
+              <div className="argus-landing__vision-kicker" style={{ fontSize: 16, fontWeight: 600 }}>Rep coaching</div>
               <h3>Compare talk ratio, question quality, and objection handling in one readable workspace.</h3>
             </article>
             <article className="argus-landing__vision-card">
-              <div className="argus-landing__vision-kicker">Manager visibility</div>
+              <div className="argus-landing__vision-kicker" style={{ fontSize: 16, fontWeight: 600 }}>Manager visibility</div>
               <h3>Track rep performance, account health, and objection trends without leaving the platform.</h3>
             </article>
           </div>

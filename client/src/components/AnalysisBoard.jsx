@@ -554,8 +554,8 @@ export default function AnalysisBoard({ analysisData, transcript, activeTab, set
               </div>
             </SectionCard>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.1fr) minmax(0, 0.9fr)', gap: 14 }}>
-              <div className="argus-card" style={{ background: 'rgba(30,41,59,0.96)', borderColor: 'rgba(148,163,184,0.14)', boxShadow: 'none' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 14, alignItems: 'stretch' }}>
+              <div className="argus-card" style={{ background: 'rgba(30,41,59,0.96)', borderColor: 'rgba(148,163,184,0.14)', boxShadow: 'none', height: '100%' }}>
                 <div className="argus-card__label" style={{ display: 'flex', alignItems: 'center', gap: 8, color: THEME.text }}>
                   <Gauge size={14} color={THEME.emerald} />
                   Talk Ratio
@@ -570,24 +570,27 @@ export default function AnalysisBoard({ analysisData, transcript, activeTab, set
                   </div>
                 </div>
               </div>
-
-              <div className="argus-card" style={{ background: 'rgba(30,41,59,0.96)', borderColor: 'rgba(148,163,184,0.14)', boxShadow: 'none' }}>
+              <div className="argus-card" style={{ background: 'rgba(30,41,59,0.96)', borderColor: 'rgba(148,163,184,0.14)', boxShadow: 'none', height: '100%' }}>
                 <div className="argus-card__label" style={{ display: 'flex', alignItems: 'center', gap: 8, color: THEME.text }}>
                   <Trophy size={14} color={THEME.emerald} />
                   Top Coaching Points
                 </div>
-                <BulletList items={repCoaching.top3CoachingPoints || []} emptyLabel="No coaching points returned." />
+                <ul style={{ margin: 0, paddingLeft: 18, paddingBottom: '1rem', display: 'flex', flexDirection: 'column', gap: 12, color: THEME.text }}>
+                  {(repCoaching.top3CoachingPoints || []).length ? (repCoaching.top3CoachingPoints || []).map((pt, idx) => (
+                    <li key={idx} style={{ lineHeight: 1.5 }}>{typeof pt === 'string' ? pt : (pt?.text || JSON.stringify(pt))}</li>
+                  )) : <li>No coaching points returned.</li>}
+                </ul>
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.1fr) minmax(0, 0.9fr)', gap: 14 }}>
-              <div className="argus-card" style={{ background: 'rgba(30,41,59,0.96)', borderColor: 'rgba(148,163,184,0.14)', boxShadow: 'none', minHeight: 320 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 14, alignItems: 'stretch' }}>
+              <div className="argus-card" style={{ background: 'rgba(30,41,59,0.96)', borderColor: 'rgba(148,163,184,0.14)', boxShadow: 'none', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 <div className="argus-card__label" style={{ display: 'flex', alignItems: 'center', gap: 8, color: THEME.text }}>
                   <Lightbulb size={14} color={THEME.emerald} />
                   Coaching Mix
                 </div>
                 {donutData.length ? (
-                  <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto', gap: 18, alignItems: 'center' }}>
+                  <div style={{ display: 'flex', gap: 18, alignItems: 'center' }}>
                     <DonutChart data={donutData} />
                     <div style={{ display: 'grid', gap: 10, alignSelf: 'center' }}>
                       {donutData.map((entry, index) => (
@@ -608,17 +611,15 @@ export default function AnalysisBoard({ analysisData, transcript, activeTab, set
                   </div>
                 )}
               </div>
-
-              <div style={{ display: 'grid', gap: 14 }}>
-                <div className="argus-card" style={{ background: 'rgba(30,41,59,0.96)', borderColor: 'rgba(148,163,184,0.14)', boxShadow: 'none' }}>
+              <div style={{ display: 'grid', gap: 14, alignItems: 'stretch' }}>
+                <div className="argus-card" style={{ background: 'rgba(30,41,59,0.96)', borderColor: 'rgba(148,163,184,0.14)', boxShadow: 'none', height: '100%' }}>
                   <div className="argus-card__label" style={{ display: 'flex', alignItems: 'center', gap: 8, color: THEME.text }}>
                     <MessageSquareText size={14} color={THEME.emerald} />
                     Open Questions
                   </div>
                   <BulletList items={repCoaching.questionQuality?.openEndedExamples || []} emptyLabel="No open-ended question examples returned." />
                 </div>
-
-                <div className="argus-card" style={{ background: 'rgba(30,41,59,0.96)', borderColor: 'rgba(148,163,184,0.14)', boxShadow: 'none' }}>
+                <div className="argus-card" style={{ background: 'rgba(30,41,59,0.96)', borderColor: 'rgba(148,163,184,0.14)', boxShadow: 'none', height: '100%' }}>
                   <div className="argus-card__label" style={{ display: 'flex', alignItems: 'center', gap: 8, color: THEME.text }}>
                     <Zap size={14} color={THEME.amber} />
                     Closed Questions
