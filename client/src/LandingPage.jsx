@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ArrowRight, Lock, ShieldAlert, Sparkles } from 'lucide-react'
 import { signIn, signUp } from './services/api.js'
-
+import api from '../services/api';
 const initialForm = { email: '', password: '' }
 
 function AuthModal({ mode, setMode, onAuthenticated }) {
