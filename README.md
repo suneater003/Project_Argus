@@ -232,6 +232,11 @@ Notes:
 ---
 ## 🧠 Architecture & Reflection
 To read my analysis on the prompt engineering decisions, LLM limitations, and where MEDDIC extraction fails in edge-case sales calls, please see the [Reflection Document](REFLECTION.md).
+## 🎥 Project Argus Demo Walkthrough
+
+Click the image below to watch the full 4-minute technical walkthrough of the LLM pipeline and MEDDIC extraction in action.
+
+[![Project Argus Demo](client\public\thumbnail.png)](enter_LINK_HERE)
 
 ## Additional notes for maintainers
 - If you plan to add or change LLM providers, keep the prompt strictness and JSON-schema enforcement.
